@@ -24,6 +24,7 @@ const client = new MongoClient(uri, {
 const run = async() => {
     try{
         const categoriesCollection = client.db('resaleProducts').collection('categories');
+        const bookingsCollection = client.db('resaleProducts').collection('bookings');
 
         app.get('/categories', async(req, res) => {
             const query = {};
@@ -36,6 +37,12 @@ const run = async() => {
             const query = {_id: ObjectId(id)};
             const products = await categoriesCollection.findOne(query);
             res.send(products);
+        });
+
+        app.post('/bookings', async(req, res) => {
+            const booking = req.body;
+            const result = await bookingsCollection.insertOne(booking);
+            res.send(result);
         })
     }
     finally{}
@@ -50,8 +57,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
-
-
-
-
-
